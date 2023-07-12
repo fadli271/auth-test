@@ -1,0 +1,29 @@
+version: "3"
+services:
+  app:
+    build: .
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    ports:
+      - "3001:3001"
+    links:
+      - database
+    depends_on:
+      - redis
+    command: npm run dev
+    network_mode: "host"
+  database:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_USER=${DB_USER}
+    ports:
+      - "${DB_PORT}:5432"
+  redis:
+    image: redis
+    restart: always
+    ports:
+      - "${REDIS_PORT}:6379"
