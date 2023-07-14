@@ -11,6 +11,8 @@ import {
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/createBook.dto';
 import { FilterBookDto } from './dto/filterBook.dto';
+import { UpdateBookDto } from './dto/updateBook.dto';
+import { UUIDValidationPipe } from 'src/pipe/uuid-validation.pipe';
 
 @Controller('books')
 export class BooksController {
@@ -18,29 +20,29 @@ export class BooksController {
 
   @Get()
   getAllBooks(@Query() filter: FilterBookDto) {
-    return this.bookService.getAllBooks(filter);
+    return this.bookService.getBooks(filter);
   }
 
   @Get('/:id')
-  getBook(@Param('id') id: string) {
+  getBook(@Param('id', UUIDValidationPipe) id: string) {
     return this.bookService.getBook(id);
   }
 
   @Post()
   createBook(@Body() payload: CreateBookDto) {
     this.bookService.createBook(payload);
-    // return this.bookService.getAllBooks();
   }
 
   @Put('/:id')
-  updateBook(@Param('id') id: string, @Body() payload: CreateBookDto) {
+  updateBook(
+    @Param('id', UUIDValidationPipe) id: string,
+    @Body() payload: UpdateBookDto,
+  ) {
     this.bookService.updateBook(id, payload);
-    // return this.bookService.getAllBooks();
   }
 
   @Delete('/:id')
-  deleteBook(@Param('id') id: string) {
+  deleteBook(@Param('id', UUIDValidationPipe) id: string) {
     this.bookService.deleteBook(id);
-    // return this.bookService.getAllBooks();
   }
 }
